@@ -15,14 +15,24 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 $(info )
+PRODUCT-NAME = build-everything-now
+
+# * Project integration --------------------------------------------------------
+
+-include Project/Project.mk
+
+# TODO: Make this dependent on presence of project branch, too, then
+#       auto checkout.
+#
 
 # * Pulling in select modules and standard targets from common/ ----------------
 
-include common/prolog.mk
-include common/git.mk
-include common/epilog.mk
+COMMON-MODULES = prolog git epilog 
 
-common/%.mk: common/.git  # Automatic checkout of common if missing.
+include $(COMMON-MODULES:%=common/%.mk)
+
+$(COMMON-MODULES:%=common/%.mk): %: common/.git  # Automatic checkout of common if missing.
+
 
 # * Generic rules --------------------------------------------------------------
 
@@ -40,17 +50,25 @@ clean::
 
 BRANCHES := $(shell git branch | grep -v '^[*]'    \
                                | sed 's|^ *||'     \
-                               | grep -v '^main$$' \
-                               | grep -v '/')
-
+                               | grep '^ben/'      \
+                               | sed 's|^ben/||')
 $(info )
 $(info BRANCHES = $(BRANCHES))
 
-init::  $(BRANCHES:%=%/.git)
+setup::  $(BRANCHES:%=%/.git) Project/.git
 
 $(BRANCHES:%=%/.git): %/.git:
 	@$(SET-SH)
-	git clone --single-branch -b "$*" . "$*"
+	git clone --single-branch -b "ben/$*" . "$*"
+
+
+# Todo: Move the following into common/project.mk, 
+#       make conditional from existence of branch project.
+#
+
+Project/.git:
+	@$(SET-SH)
+	git clone --single-branch -b "project" . "$(@D)"
 
 cleaner::  # TODO: Check if branches have been checked in and automatically push
 	@$(SET-SH)
