@@ -14,23 +14,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-all::   init
-init::
-clean::
-cleaner::
-
-.ONESHELL:
-export PS4 ==> 
-
-SET-SH = set -o pipefail; set -eux; 
-
 $(info )
+
+# * Pulling in select modules and standard targets from common/ ----------------
+
+include common/prolog.mk
+include common/git.mk
+include common/epilog.mk
+
+common/%.mk: common/.git  # Automatic checkout of common if missing.
 
 # * Generic rules --------------------------------------------------------------
 
 clean::
 	@$(SET-SH)
 	rm -f *~
+
 
 # * Initializing the work bench & and handling branches ------------------------
 #
@@ -44,6 +43,7 @@ BRANCHES := $(shell git branch | grep -v '^[*]'    \
                                | grep -v '^main$$' \
                                | grep -v '/')
 
+$(info )
 $(info BRANCHES = $(BRANCHES))
 
 init::  $(BRANCHES:%=%/.git)
@@ -51,6 +51,10 @@ init::  $(BRANCHES:%=%/.git)
 $(BRANCHES:%=%/.git): %/.git:
 	@$(SET-SH)
 	git clone --single-branch -b "$*" . "$*"
+
+cleaner::  # TODO: Check if branches have been checked in and automatically push
+	@$(SET-SH)
+	rm -rf $(BRANCHES)
 
 # * Epilog ---------------------------------------------------------------------
 
