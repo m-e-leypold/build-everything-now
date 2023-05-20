@@ -72,7 +72,7 @@ Project/.git:
 
 cleaner::  # TODO: Check if branches have been checked in and automatically push
 	@$(SET-SH)
-	rm -rf $(BRANCHES)
+	rm -rf $(BRANCHES) Project
 
 # * Epilog ---------------------------------------------------------------------
 
