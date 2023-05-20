@@ -19,7 +19,18 @@ init::
 clean::
 cleaner::
 
+.ONESHELL:
+export PS4 ==> 
+
+SET-SH = set -o pipefail; set -eux; 
+
 $(info )
+
+# * Generic rules --------------------------------------------------------------
+
+clean::
+	@$(SET-SH)
+	rm -f *~
 
 # * Initializing the work bench & and handling branches ------------------------
 #
@@ -38,8 +49,8 @@ $(info BRANCHES = $(BRANCHES))
 init::  $(BRANCHES:%=%/.git)
 
 $(BRANCHES:%=%/.git): %/.git:
+	@$(SET-SH)
 	git clone --single-branch -b "$*" . "$*"
-
 
 # * Epilog ---------------------------------------------------------------------
 
