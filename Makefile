@@ -59,8 +59,7 @@ setup::  $(BRANCHES:%=%/.git) Project/.git
 
 $(BRANCHES:%=%/.git): %/.git:
 	@$(SET-SH)
-	git clone --single-branch -b "ben/$*" . "$*"
-
+	git worktree add "$*" "ben/$*"
 
 # Todo: Move the following into common/project.mk, 
 #       make conditional from existence of branch project.
