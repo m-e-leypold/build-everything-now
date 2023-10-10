@@ -35,3 +35,7 @@ SET-SH := set -o pipefail; set -eux;
 
 $(info BEN           = $(BEN))
 $(info BEN-COMMON    = $(BEN-COMMON))
+
+VERSION         := $(shell $(BEN-COMMON)/git-version)
+
+$(info VERSION       = $(VERSION))
