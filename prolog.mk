@@ -16,6 +16,9 @@
 
 # TODO: Copy setup from toplevel make
 
+BEN        ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+BEN        := $(BEN)
+BEN-COMMON := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
 all::
 clean::
@@ -25,10 +28,10 @@ publish::
 
 .PHONY: all init clean cleaner setup
 
-# TODO: Set BEN-COMMON
-
 .ONESHELL:
 export PS4 ==> 
 
 SET-SH := set -o pipefail; set -eux; 
 
+$(info BEN           = $(BEN))
+$(info BEN-COMMON    = $(BEN-COMMON))
