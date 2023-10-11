@@ -25,13 +25,36 @@ clean::
 cleaner::
 setup::
 publish::
+check::
+quick-check::
+full-check::
+help::
+
+DOCUMENTED-TARGETS = all clean cleaner setup publish \
+                     check quick-check full-check
+
+define HELP/check
+  #
+  # Target 'check' -- Run a check on the product
+  # --------------------------------------------
+  #
+  # Run a "reasonable" check on the product. What exactly is run
+  # depends on the project type and the product. Typically this is
+  # more than for 'quick-check', but less than for 'full-check'.
+  #
+
+endef
+
 
 .PHONY: all init clean cleaner setup
 
 .ONESHELL:
 export PS4 ==> 
 
-SET-SH := set -o pipefail; set -eux; 
+SET-SH := set -o pipefail; set -eux;
+
+cleaner:: clean
+	rm -rf .build
 
 $(info BEN           = $(BEN))
 $(info BEN-COMMON    = $(BEN-COMMON))

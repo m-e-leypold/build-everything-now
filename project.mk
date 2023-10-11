@@ -14,4 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
+include Project/Project.mk
+
+setup:: Project/Project.mk
+
+Project/Project.mk:
+	git clone --single-branch -b project . Project
+
 $(info )
+$(info PRODUCT-NAME    = $(PRODUCT-NAME))
