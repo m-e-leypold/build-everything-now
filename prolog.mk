@@ -58,6 +58,8 @@ cleaner:: clean
 
 $(info BEN           = $(BEN))
 $(info BEN-COMMON    = $(BEN-COMMON))
+$(info )
+$(info PRODUCT-NAME  = $(PRODUCT-NAME))
 
 VERSION         := $(shell $(BEN-COMMON)/git-version)
 

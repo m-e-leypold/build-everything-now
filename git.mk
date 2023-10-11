@@ -29,7 +29,6 @@ GIT-VERSION-PREFIXES := $(GIT-MAJOR-VERSIONS:%=r%) \
 GIT-PUBLIC-BRANCHES  ?= main
 GIT-CURRENT-BRANCH   := $(shell git branch -q | grep '^[*]' | cut -d' ' -f2)
 
-$(info )
 $(info GIT-SLUG        = $(GIT-SLUG))
 $(info GIT-PUBLIC-USER = $(GIT-PUBLIC-USER))
 $(info GIT-REMOTES     = $(GIT-REMOTES))

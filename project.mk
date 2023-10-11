@@ -15,12 +15,20 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-include Project/Project.mk
+-include Project/Project.mk
 
 setup:: Project/Project.mk
 
+
+# Project branches are optional.
+#
+# 
+
 Project/Project.mk:
-	git clone --single-branch -b project . Project
+	git clone --single-branch -b project . Project \
+	|| { mkdir -p "$(@D)" \
+             && touch $@ \
+             && echo "*" >$(@D)/.gitignore; \
+        }
 
 $(info )
-$(info PRODUCT-NAME    = $(PRODUCT-NAME))
