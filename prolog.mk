@@ -15,3 +15,5 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 include $(BEN)/common/prolog.mk
+include $(BEN)/common/help-system.mk
+

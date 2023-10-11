@@ -67,6 +67,15 @@ check:: check-with-$(LISP-IMPLEMENTATION)
 
 endif
 
+define HELP/check +=
+  #
+  # Lisp projects run check-with-$$(LISP-IMPLEMENTATION) for 'check'
+  # and 'check' is identical to 'quick-check'.
+  #
+  # LISP-IMPLEMENTATION = $(LISP-IMPLEMENTATION)
+endef
+
+
 
 # * Check for warnings (currently SBCL only) -----------------------------------
 
