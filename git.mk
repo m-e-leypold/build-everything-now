@@ -99,11 +99,11 @@ release: VERSION $(MORE-RELEASE-FILES) pre-release-check
 	: Create a release
 	test -d .git # Must have git as version control
 	set -eux
-	git add $^
+	git add -f $(filter-out %-check, $^)
 	git add -u
 	git commit -m 'Releasing $(RELEASE)'
 	git tag $(RELEASE)
-	rm -f $^
+	rm -f $(filter-out %-check, $^)
 	git add -u
 	git commit -m 'Starting development after $(RELEASE)'
 	:
