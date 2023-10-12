@@ -89,3 +89,23 @@ git-check-worktree-clean:
 
 git-pre-publish-check:: git-check-publishable-branch git-check-worktree-clean
 git-pre-publish-check:: $(GIT-PRE-PUBLISH-CHECK)
+
+ifdef RELEASE
+
+VERSION:
+	echo $(RELEASE) >$@
+
+release: VERSION $(MORE-RELEASE-FILES) pre-release-check
+	: Create a release
+	test -d .git # Must have git as version control
+	set -eux
+	git add $^
+	git add -u
+	git commit -m 'Releasing $(RELEASE)'
+	git tag $(RELEASE)
+	rm -f $^
+	git add -u
+	git commit -m 'Starting development after $(RELEASE)'
+	:
+endif
+

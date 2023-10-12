@@ -28,6 +28,7 @@ publish::
 check::
 quick-check::
 full-check::
+pre-release-check::
 help::
 
 DOCUMENTED-TARGETS = all clean cleaner setup publish \
@@ -61,6 +62,21 @@ $(info BEN-COMMON    = $(BEN-COMMON))
 $(info )
 $(info PRODUCT-NAME  = $(PRODUCT-NAME))
 
-VERSION         := $(shell $(BEN-COMMON)/git-version)
+
+ifndef RELEASE
+  VERSION := $(shell $(BEN-COMMON)/git-version)
+
+  ifneq ($(strip $(filter release,$(MAKECMDGOALS))),)
+    $(error When target is 'release', $$(RELEASE) must be given)
+  endif
+else
+  VERSION := $(RELEASE)
+  ifneq ($(strip $(filter release,$(MAKECMDGOALS))),release)
+     $(error When RELEASE is given, the make target must be 'release' (and only this))
+  endif
+  ifneq ($(strip $(filter-out release,$(MAKECMDGOALS))),)
+     $(error With target 'release' no other targets can be specified)
+  endif
+endif
 
 $(info VERSION       = $(VERSION))
