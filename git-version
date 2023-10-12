@@ -1,3 +1,5 @@
+#!/bin/sh
+#
 # BEN - Build Everything Now
 # Copyright (C) 2023  M E Leypold
 # 
@@ -14,6 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
+
+set -eu
+
+if ! test -d .git; then
+    cat VERSION
+    exit 0
+fi
 
 cd "$(dirname "$(realpath "$0")")"
 if test "$(git status -s | wc -l)" -gt 0; then
