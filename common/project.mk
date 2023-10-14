@@ -18,9 +18,14 @@
 #
 # 
 
-include Project/Project.mk
+-include Project/Project.mk
 
 setup:: Project/Project.mk
+
+
+# Project branches are optional.
+#
+# 
 
 Project/Project.mk:
 	git clone --single-branch -b project . Project \
@@ -30,5 +35,3 @@ Project/Project.mk:
         }
 
 $(info )
-$(info PRODUCT-NAME    = $(PRODUCT-NAME))
-
