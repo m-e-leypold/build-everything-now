@@ -53,7 +53,6 @@ endef
 .ONESHELL:
 export PS4 ==> 
 
-# SET-SH := set -o pipefail; set -eux;
 SET-SH := set -x
 SHELL=bash
 .SHELLFLAGS := -euc -o pipefail

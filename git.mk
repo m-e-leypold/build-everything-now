@@ -108,4 +108,3 @@ release: VERSION $(MORE-RELEASE-FILES) pre-release-check
 	git commit -m 'Starting development after $(RELEASE)'
 	:
 endif
-
