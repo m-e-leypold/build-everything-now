@@ -22,6 +22,8 @@ else
   undefine SETUP-PROJECT
 endif
 
+GITIGNORE += $(BEN-COMMON)/gitignore-template
+
 setup-project:: LICENSE .gitignore Makefile
 
 LICENSE: $(BEN-COMMON)/license-templates/$(LICENSE).txt
@@ -31,10 +33,11 @@ LICENSE: $(BEN-COMMON)/license-templates/$(LICENSE).txt
 	mv $@.tmp $@
 	:
 
-.gitignore::
-	: Add general and BEN specific ignore patterns
+.gitignore:
+	: Create .gitignore
 	$(SET-SH)
-	cat $(BEN-COMMON)/gitignore-template >$@
+	cat $(GITIGNORE) >$@.tmp
+	mv $@.tmp $@
 	:
 
 Makefile:
