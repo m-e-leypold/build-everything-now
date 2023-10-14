@@ -89,7 +89,10 @@ else
   endif
 endif
 
+GIT-COMMIT := $(shell git log -n 1 --oneline --no-abbrev-commit | awk '{print $$1}')
+
 $(info VERSION       = $(VERSION))
+$(info GIT-COMMIT    = $(GIT-COMMIT))
 
 include $(BEN-COMMON)/ben.mk
 include $(BEN-COMMON)/setup-project.mk

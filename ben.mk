@@ -25,7 +25,8 @@ BEN:
 ben-split+merge: BEN
 	: Split off .ben and merge to BEN
 	$(SET-SH)
-	$(BEN-COMMON)/ben-split+merge .ben BEN
+	$(BEN-COMMON)/ben-split+merge .ben BEN \
+            "ben: Merging .ben to ben/$(BEN-RULE-SET) from $(PRODUCT-NAME) @ $(GIT-COMMIT)"
 	:
 
 ben-upstream: ben-split+merge BEN
@@ -39,8 +40,11 @@ ben-update: BEN
 	$(SET-SH)
 	cd BEN
 	git pull BEN ben/$(BEN-RULE-SET)
+	BEN_COMMIT="$$(git log -n 1 --oneline --no-abbrev-commit | awk '{print $$1}')"
 	cd ..
-	git subtree merge --prefix=.ben ben/$(BEN-RULE-SET)
+	git subtree merge --prefix=.ben \
+            -m "Updating .ben from ben/$(BEN-RULE-SET) @ $$BEN_COMMIT" \
+           ben/$(BEN-RULE-SET) 
 	:
 
 endif

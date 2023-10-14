@@ -19,8 +19,8 @@
 # $1 - path to be split
 # $2 - worktree (checked out) into which to merge)
 
-if test "$#" -ne 2; then
-    echo >&2 "Need exactly two arguments: SPLIT_DIR and WORKTREE (path)."
+if test "$#" -ne 3; then
+    echo >&2 "Need exactly two arguments: SPLIT_DIR, WORKTREE (path) and MESSAGE"
     exit 1
 fi
 
@@ -29,10 +29,11 @@ set -o pipefail
 
 SPLIT_DIR="$1"
 WORKTREE="$2"
+MESSAGE="$3"
 
 COMMIT="$(git subtree split -P "$SPLIT_DIR")"
 echo "Commit $COMMIT split out, will be merged"
 
 cd "$WORKTREE"
-git merge "$COMMIT"
+git merge -m "$MESSAGE" "$COMMIT"
 
