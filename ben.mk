@@ -34,4 +34,13 @@ ben-upstream: ben-split+merge BEN
 	git push BEN ben/$(BEN-RULE-SET)
 	:
 
+ben-update: BEN
+	: Merge .ben from upstream
+	$(SET-SH)
+	cd BEN
+	git pull BEN ben/$(BEN-RULE-SET)
+	cd ..
+	git subtree merge --prefix=.ben ben/$(BEN-RULE-SET)
+	:
+
 endif
