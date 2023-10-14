@@ -52,11 +52,21 @@ endef
 .ONESHELL:
 export PS4 ==> 
 
-SET-SH := set -o pipefail; set -eux;
+# SET-SH := set -o pipefail; set -eux;
+SET-SH := set -x
+SHELL=bash
+.SHELLFLAGS := -euc -o pipefail
+
+# Note: .SHELLFLAGS also affects $(shell ...) calls which we do not
+# want to be verbose. But we want for all shell fragments that they
+# fail if any command fails, _especially_ when using .ONESHELL. So ATM
+# $(SET-SH) gives us verbosity, but even if we forget it, recipes fail
+# correctly.
 
 cleaner:: clean
 	rm -rf .build
 
+$(info BEN-RULE-SET  = $(BEN-RULE-SET))
 $(info BEN           = $(BEN))
 $(info BEN-COMMON    = $(BEN-COMMON))
 $(info )
@@ -80,3 +90,5 @@ else
 endif
 
 $(info VERSION       = $(VERSION))
+
+include $(BEN-COMMON)/ben.mk
