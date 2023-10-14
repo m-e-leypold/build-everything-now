@@ -30,6 +30,7 @@ quick-check::
 full-check::
 pre-release-check::
 help::
+setup-project::
 
 DOCUMENTED-TARGETS = all clean cleaner setup publish \
                      check quick-check full-check
@@ -72,7 +73,6 @@ $(info BEN-COMMON    = $(BEN-COMMON))
 $(info )
 $(info PRODUCT-NAME  = $(PRODUCT-NAME))
 
-
 ifndef RELEASE
   VERSION := $(shell $(BEN-COMMON)/git-version)
 
@@ -92,3 +92,4 @@ endif
 $(info VERSION       = $(VERSION))
 
 include $(BEN-COMMON)/ben.mk
+include $(BEN-COMMON)/setup-project.mk
