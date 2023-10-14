@@ -14,9 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-BEN := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+BEN           ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+BEN           := $(BEN)
+BEN-LISP      := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+BEN-RULE-SET  := lisp
 
-include $(BEN)/prolog.mk
+# TODO: Update $(BEN) references below to BEN-LISP (mostly)
+#
+#
+
+$(info BEN-LISP = $(BEN-LISP))
 
 ASD-FILE := $(wildcard *.asd)
 
@@ -28,6 +35,7 @@ endif
 PRODUCT-NAME = $(lastword $(subst ., ,$(ASD-FILE:%.asd=%)))
 SYSTEM-NAME  = $(ASD-FILE:%.asd=%)
 
+include $(BEN-LISP)/prolog.mk
 include $(BEN)/common/project.mk
 
 ALL-LISP-IMPLEMENTATIONS ?= sbcl ecl clasp ccl cmucl clisp abcl mkcl
