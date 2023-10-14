@@ -19,7 +19,7 @@ ifeq ($(strip $(filter setup-project,$(MAKECMDGOALS))),setup-project)
   LICENSE      ?= gpl-3.0
   LICENSE      := $(LICENSE)
 else
-  undef SETUP-PROJECT
+  undefine SETUP-PROJECT
 endif
 
 setup-project:: LICENSE .gitignore Makefile
