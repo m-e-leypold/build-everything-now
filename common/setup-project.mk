@@ -14,21 +14,35 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Project branches are optional.
-#
-# 
+ifeq ($(strip $(filter setup-project,$(MAKECMDGOALS))),setup-project)
+  SETUP-PROJECT = yes
+  LICENSE      ?= gpl-3.0
+  LICENSE      := $(LICENSE)
+else
+  undefine SETUP-PROJECT
+endif
 
-include Project/Project.mk
+GITIGNORE += $(BEN-COMMON)/gitignore-template
 
-setup:: Project/Project.mk
+setup-project:: LICENSE .gitignore Makefile
 
-Project/Project.mk:
-	git clone --single-branch -b project . Project \
-	|| { mkdir -p "$(@D)" \
-             && touch $@ \
-             && echo "*" >$(@D)/.gitignore; \
-        }
+LICENSE: $(BEN-COMMON)/license-templates/$(LICENSE).txt
+	: Generate LICENSE $(LICENSE)
+	$(SET-SH)
+	awk '(s){print;next}/^#/{next}/^([^#]|$$)/{print ;s=1}' <$< >$@.tmp
+	mv $@.tmp $@
+	:
 
-$(info )
-$(info PRODUCT-NAME    = $(PRODUCT-NAME))
+.gitignore:
+	: Create .gitignore
+	$(SET-SH)
+	cat $(GITIGNORE) >$@.tmp
+	mv $@.tmp $@
+	:
 
+Makefile:
+	: Create toplevel makefile
+	$(SET-SH)
+	sed 's/__PRODUCT-NAME__/$(PRODUCT-NAME)/g' <$(BEN)/makefile-template >$@.tmp
+	mv $@.tmp $@
+	:
