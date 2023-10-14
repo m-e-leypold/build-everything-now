@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 # BEN - Build Everything Now
 # Copyright (C) 2023  M E Leypold
 # 
@@ -14,21 +16,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Project branches are optional.
-#
-# 
+# $1 - path to be split
+# $2 - worktree (checked out) into which to merge)
 
-include Project/Project.mk
+if test "$#" -ne 3; then
+    echo >&2 "Need exactly two arguments: SPLIT_DIR, WORKTREE (path) and MESSAGE"
+    exit 1
+fi
 
-setup:: Project/Project.mk
+set -eu
+set -o pipefail
 
-Project/Project.mk:
-	git clone --single-branch -b project . Project \
-	|| { mkdir -p "$(@D)" \
-             && touch $@ \
-             && echo "*" >$(@D)/.gitignore; \
-        }
+SPLIT_DIR="$1"
+WORKTREE="$2"
+MESSAGE="$3"
 
-$(info )
-$(info PRODUCT-NAME    = $(PRODUCT-NAME))
+COMMIT="$(git subtree split -P "$SPLIT_DIR")"
+echo "Commit $COMMIT split out, will be merged"
+
+cd "$WORKTREE"
+git merge -m "$MESSAGE" "$COMMIT"
 

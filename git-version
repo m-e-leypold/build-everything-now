@@ -1,3 +1,5 @@
+#!/bin/sh
+#
 # BEN - Build Everything Now
 # Copyright (C) 2023  M E Leypold
 # 
@@ -13,22 +15,20 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-# Project branches are optional.
 #
-# 
 
-include Project/Project.mk
+set -eu
 
-setup:: Project/Project.mk
+if ! test -d .git; then
+    cat VERSION
+    exit 0
+fi
 
-Project/Project.mk:
-	git clone --single-branch -b project . Project \
-	|| { mkdir -p "$(@D)" \
-             && touch $@ \
-             && echo "*" >$(@D)/.gitignore; \
-        }
+cd "$(dirname "$(realpath "$0")")"
+if test "$(git status -s | wc -l)" -gt 0; then
+    _DIRTY="+DIRTY-""$(date -Is | sed 's|[+].*||;s|[-T:]||g')"
+else
+    _DIRTY=""
+fi
 
-$(info )
-$(info PRODUCT-NAME    = $(PRODUCT-NAME))
-
+echo "$(git describe --tags | sed 's|-g\(.*\)|+COMMIT-\1|g;')"$_DIRTY

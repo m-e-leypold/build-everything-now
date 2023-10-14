@@ -16,6 +16,9 @@
 
 # TODO: Copy setup from toplevel make
 
+BEN        ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+BEN        := $(BEN)
+BEN-COMMON := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
 all::
 clean::
@@ -25,7 +28,9 @@ publish::
 check::
 quick-check::
 full-check::
+pre-release-check::
 help::
+setup-project::
 
 DOCUMENTED-TARGETS = all clean cleaner setup publish \
                      check quick-check full-check
@@ -45,13 +50,48 @@ endef
 
 .PHONY: all init clean cleaner setup
 
-# TODO: Set BEN-COMMON
-
 .ONESHELL:
 export PS4 ==> 
 
-SET-SH := set -o pipefail; set -eux;
+SET-SH := set -x
+SHELL=bash
+.SHELLFLAGS := -euc -o pipefail
+
+# Note: .SHELLFLAGS also affects $(shell ...) calls which we do not
+# want to be verbose. But we want for all shell fragments that they
+# fail if any command fails, _especially_ when using .ONESHELL. So ATM
+# $(SET-SH) gives us verbosity, but even if we forget it, recipes fail
+# correctly.
 
 cleaner:: clean
 	rm -rf .build
 
+$(info BEN-RULE-SET  = $(BEN-RULE-SET))
+$(info BEN           = $(BEN))
+$(info BEN-COMMON    = $(BEN-COMMON))
+$(info )
+$(info PRODUCT-NAME  = $(PRODUCT-NAME))
+
+ifndef RELEASE
+  VERSION := $(shell $(BEN-COMMON)/git-version)
+
+  ifneq ($(strip $(filter release,$(MAKECMDGOALS))),)
+    $(error When target is 'release', $$(RELEASE) must be given)
+  endif
+else
+  VERSION := $(RELEASE)
+  ifneq ($(strip $(filter release,$(MAKECMDGOALS))),release)
+     $(error When RELEASE is given, the make target must be 'release' (and only this))
+  endif
+  ifneq ($(strip $(filter-out release,$(MAKECMDGOALS))),)
+     $(error With target 'release' no other targets can be specified)
+  endif
+endif
+
+GIT-COMMIT := $(shell git log -n 1 --oneline --no-abbrev-commit | awk '{print $$1}')
+
+$(info VERSION       = $(VERSION))
+$(info GIT-COMMIT    = $(GIT-COMMIT))
+
+include $(BEN-COMMON)/ben.mk
+include $(BEN-COMMON)/setup-project.mk
